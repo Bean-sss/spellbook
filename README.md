@@ -1,14 +1,15 @@
 # Member Directory Scraper
 
-A Selenium-based web scraper that captures network requests to extract member data from the Waterloo Region Law Association directory.
+A Python scraper that directly calls the WildApricot API to extract member data from the Waterloo Region Law Association directory.
 
 ## Features
 
-- Captures network requests using selenium-wire
+- Direct API access (no browser automation needed - fast and reliable!)
 - Extracts member names, emails, phone numbers, and practice areas
-- Handles pagination automatically
+- Parses WildApricot's JavaScript-like JsonStructure format
+- Handles HTML entities (&amp;, etc.)
 - Saves results to JSON format
-- Runs in headless mode
+- Clean, well-documented code
 
 ## Setup
 
@@ -19,24 +20,36 @@ pip install -r requirements.txt
 
 2. Run the scraper:
 ```bash
-python scraper.py
+python scraper_simple.py
 ```
 
 ## Output
 
-The script will create a `members.json` file containing all scraped member data.
+The script creates `members.json` with all scraped member data.
+
+**Data Quality:**
+- 575 total members
+- 100% have names and emails
+- 57% have phone numbers
+- 76% have practice areas
 
 ## How It Works
 
-1. Uses selenium-wire to intercept network traffic
-2. Loads the member directory page
-3. Captures API requests to `/Sys/MemberDirectory/LoadMembers`
-4. Parses JSON responses to extract member data
-5. Clicks through pagination to get all pages
-6. Saves extracted data to JSON file
+1. Establishes a session by visiting the directory page
+2. Calls the WildApricot LoadMembers API endpoint directly
+3. Strips the `while(1);` security prefix from responses
+4. Parses the custom JsonStructure format using regex
+5. Extracts names, emails, phone numbers, and practice areas
+6. Saves all data to a JSON file
+
+## File Descriptions
+
+- `scraper_simple.py` - **RECOMMENDED** - Fast, reliable requests-based scraper
+- `scraper_v2.py` - Selenium with Chrome DevTools Protocol (for reference)
+- `scraper.py` - Original selenium-wire approach (deprecated due to compatibility issues)
 
 ## Requirements
 
 - Python 3.7+
-- Chrome/Chromium browser
 - Internet connection
+- No browser needed!

@@ -27,17 +27,28 @@ class MemberDirectoryScraper:
     def setup_driver(self):
         """Set up Chrome driver with selenium-wire for network capture."""
         options = webdriver.ChromeOptions()
-        options.add_argument('--headless')  # Run in headless mode
+        options.add_argument('--headless=new')  # Run in new headless mode
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
         options.add_argument('--disable-gpu')
+        options.add_argument('--disable-software-rasterizer')
+        options.add_argument('--disable-extensions')
+        options.add_argument('--disable-background-networking')
+        options.add_argument('--disable-default-apps')
+        options.add_argument('--disable-sync')
+        options.add_argument('--disable-translate')
+        options.add_argument('--mute-audio')
+        options.add_argument('--no-first-run')
+        options.add_argument('--safebrowsing-disable-auto-update')
+        options.add_argument('--window-size=1920,1080')
+        options.binary_location = '/opt/chrome/chrome'  # Use installed Chrome
 
         # Set up selenium-wire options
         seleniumwire_options = {
             'disable_encoding': True  # Disable encoding to get readable responses
         }
 
-        service = Service(ChromeDriverManager().install())
+        service = Service('/usr/local/bin/chromedriver')
         self.driver = webdriver.Chrome(
             service=service,
             options=options,
